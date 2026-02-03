@@ -1,0 +1,39 @@
+@echo off
+title SPACE XIT - ZERO LAG SYSTEM
+mode con: cols=60 lines=20
+color 0b
+
+:: Verifica Privilegios de Admin
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [!] ERRO: EXECUTE COMO ADMINISTRADOR!
+    pause
+    exit
+)
+
+echo ==========================================
+echo     OTIMIZACAO AGRESSIVA - @eoo_gomes3
+echo ==========================================
+echo.
+echo [+] Removendo lixo do Windows...
+del /s /f /q %temp%\*.* >nul 2>&1
+del /s /f /q C:\Windows\Temp\*.* >nul 2>&1
+del /s /f /q C:\Windows\Prefetch\*.* >nul 2>&1
+
+echo [+] Ajustando Prioridade do Processador...
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d 38 /f >nul
+
+echo [+] Desativando Servicos de Lag (SysMain)...
+sc stop SysMain >nul 2>&1
+sc config SysMain start= disabled >nul 2>&1
+
+echo [+] Melhorando Resposta da Rede (Ping)...
+netsh int tcp set global autotuninglevel=disabled >nul
+ipconfig /flushdns >nul
+
+echo.
+echo ==========================================
+echo    PC OTIMIZADO! REINICIE O SISTEMA.
+echo         CONTATO: @eoo_gomes3
+echo ==========================================
+pause
